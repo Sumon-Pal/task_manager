@@ -16,6 +16,7 @@ class _sphlashScreenState extends State<sphlashScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    //
     super.initState();
     _moveToNextScreen();
   }

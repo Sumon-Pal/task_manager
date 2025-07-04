@@ -51,6 +51,7 @@ class task_manager extends StatelessWidget {
           style: TextButton.styleFrom(
             foregroundColor: Colors.green
           )
+
         )
       ),
       initialRoute: '/',
