@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 
 class SignInScreen extends StatefulWidget {
+  static final String name = '/sign-in';
   const SignInScreen({super.key});
 
   @override

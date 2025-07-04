@@ -5,6 +5,7 @@ import 'package:task_manager/ui/utils/assetsPath.dart';
 import '../utils/screen_background.dart';
 
 class sphlashScreen extends StatefulWidget {
+  static const String name = '/';
   const sphlashScreen({super.key});
 
   @override
@@ -21,9 +22,9 @@ class _sphlashScreenState extends State<sphlashScreen> {
 
   Future<void> _moveToNextScreen() async {
     await Future.delayed(Duration(seconds: 3));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignInScreen()),
+    Navigator.pushReplacementNamed(
+      context, SignInScreen.name
+
     );
   }
 

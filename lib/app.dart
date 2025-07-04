@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/screens/sphlash_screen.dart';
 
 class task_manager extends StatelessWidget {
@@ -52,7 +53,11 @@ class task_manager extends StatelessWidget {
           )
         )
       ),
-      home:sphlashScreen(),
+      initialRoute: '/',
+      routes: {
+        sphlashScreen.name : (context)=>sphlashScreen(),
+        SignInScreen.name : (context)=> SignInScreen()
+      },
     );
   }
 }
