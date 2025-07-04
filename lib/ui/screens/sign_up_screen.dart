@@ -149,7 +149,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  void _onTapForgotPasswordButton() {}
 
   void _onTapSignInButton() {
     Navigator.popAndPushNamed(context,SignInScreen.name);
