@@ -108,31 +108,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 32),
                   Center(
-                    child: Column(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: "Have account?",
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Have account?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          letterSpacing: 0.4,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "Sign In",
                             style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.green,
                               letterSpacing: 0.4,
                             ),
-                            children: [
-                              TextSpan(
-                                text: "Sign In",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.green,
-                                  letterSpacing: 0.4,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = _onTapSignInButton,
-                              ),
-                            ],
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = _onTapSignInButton,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

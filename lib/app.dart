@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/forgot_password_email.dart';
+import 'package:task_manager/ui/screens/pin_code_varification.dart';
+import 'package:task_manager/ui/screens/set_password.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/screens/sphlash_screen.dart';
@@ -59,7 +62,10 @@ class task_manager extends StatelessWidget {
       routes: {
         sphlashScreen.name : (context)=>sphlashScreen(),
         SignInScreen.name : (context)=> SignInScreen(),
-        SignUpScreen.name : (context)=> SignUpScreen()
+        SignUpScreen.name : (context)=> SignUpScreen(),
+        ForgotPasswordEmailScreen.name : (context)=> ForgotPasswordEmailScreen(),
+        PinVerificationScreen.name : (context)=> PinVerificationScreen(),
+        SetPassword.name : (context)=> SetPassword()
       },
     );
   }
