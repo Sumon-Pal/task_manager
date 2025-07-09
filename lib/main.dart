@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:task_manager/app.dart';
 
-void main(){
+void main() {
   runApp(task_manager());
 }

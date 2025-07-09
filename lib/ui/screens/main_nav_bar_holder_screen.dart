@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/new_task_list_screen.dart';
+import 'package:task_manager/ui/screens/progress_task_screen.dart';
 
 import '../widgets/tm_app_bar.dart';
+import 'cancle_task_screen.dart';
+import 'completed_task_screen.dart';
 
 class MainNavBarHolderScreen extends StatefulWidget {
   static const String name = '/main-nav-bar-holder';
@@ -14,16 +17,21 @@ class MainNavBarHolderScreen extends StatefulWidget {
 
 class _MainNavBarHolderScreenState extends State<MainNavBarHolderScreen> {
   int _selectedIndex = 0;
-  final List<Widget> _screens = [NewTaskListScreen()];
+  final List<Widget> _screens = [
+    NewTaskListScreen(),
+    CompletedTaskScreen(),
+    CancleTaskScreen(),
+    ProgressTaskScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:TMAppBar(),
-      body:_screens[_selectedIndex],
+      appBar: TMAppBar(),
+      body: _screens[_selectedIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
-        onDestinationSelected: (int index){
+        onDestinationSelected: (int index) {
           _selectedIndex = index;
           setState(() {});
         },
@@ -40,5 +48,3 @@ class _MainNavBarHolderScreenState extends State<MainNavBarHolderScreen> {
     );
   }
 }
-
-

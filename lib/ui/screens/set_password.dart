@@ -5,6 +5,7 @@ import 'package:task_manager/ui/utils/screen_background.dart';
 
 class SetPassword extends StatefulWidget {
   static final String name = '/set-password';
+
   const SetPassword({super.key});
 
   @override
@@ -12,9 +13,11 @@ class SetPassword extends StatefulWidget {
 }
 
 class _SetPasswordState extends State<SetPassword> {
-  final TextEditingController _confirmPasswordTEcontroller = TextEditingController();
+  final TextEditingController _confirmPasswordTEcontroller =
+      TextEditingController();
   final TextEditingController _passwordTEcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,16 +32,17 @@ class _SetPasswordState extends State<SetPassword> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 150,),
+                  const SizedBox(height: 150),
                   Text(
                     'Set Password',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 4,),
-                  Text('Minimum length password 8 Character with\n latter and number combination',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.grey
-                      )
+                  const SizedBox(height: 4),
+                  Text(
+                    'Minimum length password 8 Character with\n latter and number combination',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 28),
                   TextFormField(
@@ -46,8 +50,8 @@ class _SetPasswordState extends State<SetPassword> {
                     obscureText: true,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Password'),
-                    validator: (String? value){
-                      if((value?.length ?? 0)<=7){
+                    validator: (String? value) {
+                      if ((value?.length ?? 0) <= 7) {
                         return 'Enter a valid password';
                       }
                       return null;
@@ -59,8 +63,8 @@ class _SetPasswordState extends State<SetPassword> {
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(hintText: 'Confirm Password'),
-                    validator: (String? value){
-                      if((value?? '') != _passwordTEcontroller.text){
+                    validator: (String? value) {
+                      if ((value ?? '') != _passwordTEcontroller.text) {
                         return 'Confirm Password not match';
                       }
                       return null;
@@ -104,6 +108,7 @@ class _SetPasswordState extends State<SetPassword> {
       ),
     );
   }
+
   void _onTapConfirmButton() {
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }

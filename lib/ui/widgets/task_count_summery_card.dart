@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 class TaskCountSammeryCard extends StatelessWidget {
   const TaskCountSammeryCard({
-    super.key, required this.title, required this.count,
+    super.key,
+    required this.title,
+    required this.count,
   });
+
   final String title;
   final int count;
 
@@ -17,8 +20,8 @@ class TaskCountSammeryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$count',style: Theme.of(context).textTheme.titleLarge),
-            Text(title,maxLines: 1,)
+            Text('$count', style: Theme.of(context).textTheme.titleLarge),
+            Text(title, maxLines: 1),
           ],
         ),
       ),

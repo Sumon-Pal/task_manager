@@ -7,6 +7,7 @@ import 'package:task_manager/ui/utils/screen_background.dart';
 
 class PinVerificationScreen extends StatefulWidget {
   static final String name = '/pin-verification';
+
   const PinVerificationScreen({super.key});
 
   @override
@@ -16,6 +17,7 @@ class PinVerificationScreen extends StatefulWidget {
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
   final TextEditingController _otplTEcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,16 +32,17 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 150,),
+                  const SizedBox(height: 150),
                   Text(
                     'PIN Verification',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 4),
-                  Text('A 6 digit verification pin will send to your email address',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: Colors.grey
-                      )
+                  Text(
+                    'A 6 digit verification pin will send to your email address',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleSmall?.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 28),
                   PinCodeTextField(
@@ -53,18 +56,18 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                       fieldHeight: 50,
                       fieldWidth: 40,
                       activeFillColor: Colors.white,
-                      inactiveColor: Colors.grey
+                      inactiveColor: Colors.grey,
                     ),
                     animationDuration: Duration(milliseconds: 300),
                     backgroundColor: Colors.transparent,
                     controller: _otplTEcontroller,
                     onCompleted: (v) {
                       print("Completed");
-                    }, appContext: context,
-                    
+                    },
+                    appContext: context,
                   ),
 
-                  const SizedBox(height: 16,),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _onTapSubmitButton,
                     child: Text('Verify'),
@@ -102,14 +105,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
       ),
     );
   }
+
   void _onTapSubmitButton() {
     // if(_formKey.currentState!.validate()){
     //   //TODO: Sign in with API
     // }
     Navigator.pushReplacementNamed(context, SetPassword.name);
-
   }
-
 
   void _onTapSignInButton() {
     Navigator.pushReplacementNamed(context, SignInScreen.name);

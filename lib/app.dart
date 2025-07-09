@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/screens/forgot_password_email.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/pin_code_varification.dart';
@@ -16,58 +17,44 @@ class task_manager extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
-          titleLarge: TextStyle(fontSize: 32,fontWeight:FontWeight.w900)
+          titleLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
         ),
-        inputDecorationTheme:
-         InputDecorationTheme(
-        fillColor: Colors.white,
-        filled: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 12),
-        hintStyle: TextStyle(
-            color: Colors.grey,
-            fontWeight: FontWeight.w700
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: Colors.white,
+          filled: true,
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: TextStyle(color: Colors.grey, fontWeight: FontWeight.w700),
+          border: OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
         ),
-        border: OutlineInputBorder(
-            borderSide: BorderSide.none
-        ),
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide.none
-        ),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide.none
-        ),
-        errorBorder: OutlineInputBorder(
-            borderSide: BorderSide.none
-        ),
-
-      ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              fixedSize: Size.fromWidth(double.maxFinite),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
-              ),
-              padding: EdgeInsets.symmetric(vertical: 12),
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white
+            fixedSize: Size.fromWidth(double.maxFinite),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: EdgeInsets.symmetric(vertical: 12),
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
           ),
         ),
         textButtonTheme: TextButtonThemeData(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.green
-          )
-
-        )
+          style: TextButton.styleFrom(foregroundColor: Colors.green),
+        ),
       ),
       initialRoute: '/',
       routes: {
-        sphlashScreen.name : (context)=>sphlashScreen(),
-        SignInScreen.name : (context)=> SignInScreen(),
-        SignUpScreen.name : (context)=> SignUpScreen(),
-        ForgotPasswordEmailScreen.name : (context)=> ForgotPasswordEmailScreen(),
-        PinVerificationScreen.name : (context)=> PinVerificationScreen(),
-        SetPassword.name : (context)=> SetPassword(),
-        MainNavBarHolderScreen.name : (context)=> MainNavBarHolderScreen()
+        sphlashScreen.name: (context) => sphlashScreen(),
+        SignInScreen.name: (context) => SignInScreen(),
+        SignUpScreen.name: (context) => SignUpScreen(),
+        ForgotPasswordEmailScreen.name: (context) =>
+            ForgotPasswordEmailScreen(),
+        PinVerificationScreen.name: (context) => PinVerificationScreen(),
+        SetPassword.name: (context) => SetPassword(),
+        MainNavBarHolderScreen.name: (context) => MainNavBarHolderScreen(),
+        AddNewTaskScreen.name: (context) => AddNewTaskScreen(),
       },
     );
   }
