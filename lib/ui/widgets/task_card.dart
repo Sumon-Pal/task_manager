@@ -70,8 +70,6 @@ class TaskCard extends StatelessWidget {
         return 'Completed';
       case TaskType.cancelled:
         return 'Cancelled';
-      default:
-        return '';
     }
   }
 }

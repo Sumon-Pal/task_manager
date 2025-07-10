@@ -38,17 +38,28 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                   ),
                   const SizedBox(height: 42),
                   TextFormField(
+                    validator: (String? value){
+                      if(value?.trim().isEmpty?? true){
+                        return 'Enter your Subject';
+                      }
+                      return null;
+                    },
                     controller: _emailTEcontroller,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Subject'),
                   ),
                   const SizedBox(height: 14),
-                  TextField(
+                  TextFormField(
+                    validator: (String? value){
+                      if(value?.trim().isEmpty?? true){
+                        return 'Enter your description';
+                      }
+                      return null;
+                    },
                     controller: _passwordTEcontroller,
-                    obscureText: true,
                     textInputAction: TextInputAction.done,
+                    maxLines: 10,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(vertical: 80.0),
                       hintText: 'Description',
                       //floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -67,5 +78,18 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
     );
   }
 
-  void _onTapAddTask() {}
+  void _onTapAddTask() {
+    if(_formKey.currentState!.validate()){
+      // TODO : Add new task
+    }
+    Navigator.pop(context);
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailTEcontroller.dispose();
+    _passwordTEcontroller.dispose();
+    super.dispose();
+  }
+
 }

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
-import 'package:task_manager/ui/utils/assetsPath.dart';
+import 'package:task_manager/ui/utils/assets_path.dart';
 import '../utils/screen_background.dart';
 
-class sphlashScreen extends StatefulWidget {
+class SphlashScreen extends StatefulWidget {
   static const String name = '/';
 
-  const sphlashScreen({super.key});
+  const SphlashScreen({super.key});
 
   @override
-  State<sphlashScreen> createState() => _sphlashScreenState();
+  State<SphlashScreen> createState() => _SphlashScreenState();
 }
 
-class _sphlashScreenState extends State<sphlashScreen> {
+class _SphlashScreenState extends State<SphlashScreen> {
   @override
   void initState() {
     // TODO: implement initState
@@ -24,7 +24,7 @@ class _sphlashScreenState extends State<sphlashScreen> {
 
   Future<void> _moveToNextScreen() async {
     await Future.delayed(Duration(seconds: 3));
-    Navigator.pushNamedAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil (
       context,
       SignInScreen.name,
       (predicate) => false,
@@ -35,7 +35,7 @@ class _sphlashScreenState extends State<sphlashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ScreenBackground(
-        child: Center(child: SvgPicture.asset(assetsPath.logoSvg)),
+        child: Center(child: SvgPicture.asset(AssetsPath.logoSvg)),
       ),
     );
   }

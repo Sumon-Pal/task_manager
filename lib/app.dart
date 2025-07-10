@@ -7,13 +7,17 @@ import 'package:task_manager/ui/screens/set_password.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/screens/sphlash_screen.dart';
+import 'package:task_manager/ui/screens/update_profile_screen.dart';
 
-class task_manager extends StatelessWidget {
-  const task_manager({super.key});
+class TaskManager extends StatelessWidget {
+  const TaskManager({super.key});
+
+   static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigator,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         textTheme: TextTheme(
@@ -46,7 +50,7 @@ class task_manager extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        sphlashScreen.name: (context) => sphlashScreen(),
+        SphlashScreen.name: (context) => SphlashScreen(),
         SignInScreen.name: (context) => SignInScreen(),
         SignUpScreen.name: (context) => SignUpScreen(),
         ForgotPasswordEmailScreen.name: (context) =>
@@ -55,6 +59,7 @@ class task_manager extends StatelessWidget {
         SetPassword.name: (context) => SetPassword(),
         MainNavBarHolderScreen.name: (context) => MainNavBarHolderScreen(),
         AddNewTaskScreen.name: (context) => AddNewTaskScreen(),
+        UpdateProfileScreen.name: (context)=> UpdateProfileScreen()
       },
     );
   }
