@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
 
@@ -19,6 +20,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _mobileTEcontroller = TextEditingController();
   final TextEditingController _passwordTEcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ImagePicker _imagePicker = ImagePicker();
+  XFile? _selectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -151,14 +154,26 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
+            Text(
+              _selectedImage == null ? 'Select Image' : _selectedImage!.name,
+              maxLines: 1,
+              style: TextStyle(overflow: TextOverflow.ellipsis),
+            ),
           ],
         ),
       ),
     );
   }
 
-  void _onTapPhotoPicker(){
-
+  Future<void> _onTapPhotoPicker() async {
+    final XFile? image = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+    if (image != null) {
+      _selectedImage = image;
+      setState(() {});
+    }
   }
 
   void _onTapSignUpButton() {
