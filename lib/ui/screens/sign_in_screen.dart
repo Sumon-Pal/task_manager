@@ -1,10 +1,14 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/ui/screens/forgot_password_email.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/snack_bar_message.dart';
+
+import '../../data/services/urls.dart';
 
 class SignInScreen extends StatefulWidget {
   static final String name = '/sign-in';
@@ -18,6 +22,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEcontroller = TextEditingController();
   final TextEditingController _passwordTEcontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _signInProgress = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,9 +120,26 @@ class _SignInScreenState extends State<SignInScreen> {
   }
   void _onTapSignInButton() {
     if(_formKey.currentState!.validate()){
-      //TODO: Sign in with API
+      _signIn();
     }
-    Navigator.pushNamedAndRemoveUntil(context, MainNavBarHolderScreen.name, (predicate)=> false);
+
+  }
+  Future<void> _signIn() async {
+    _signInProgress = true;
+    setState(() {});
+    Map<String,String> requestBody ={
+      'email':_emailTEcontroller.text.trim(),
+      "password":_passwordTEcontroller.text,
+    };
+    NetworkResponse response = await NetworkCaller.postRequest(url: Url.loginUrl,body: requestBody);
+    if(response.isSuccess){
+      Navigator.pushNamedAndRemoveUntil(context, MainNavBarHolderScreen.name, (predicate)=> false);
+    }else{
+      _signInProgress = false;
+      setState(() {});
+      showSnackBarMessage(context, response.errorMessage.toString());
+    }
+
   }
 
   void _onTapForgotPasswordButton() {

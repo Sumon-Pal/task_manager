@@ -64,8 +64,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'First Name'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 2) {
+                        return 'Enter a valid Name';
                       }
                       return null;
                     },
@@ -76,8 +76,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Last Name'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 2) {
+                        return 'Enter a valid Name';
                       }
                       return null;
                     },
@@ -89,8 +89,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Mobile'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 10) {
+                        return 'Enter a valid Mobile Number';
                       }
                       return null;
                     },
@@ -172,11 +172,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {});
     if(response.isSuccess){
       showSnackBarMessage(context, 'Registration is Successful. Please Log in');
-      //Navigator.pushNamed(context, SignInScreen.name);
+      Navigator.pushNamed(context, SignInScreen.name);
       _clearTextField();
     }else{
       showSnackBarMessage(context, response.errorMessage.toString());
-      _clearTextField();
+      //_clearTextField();
     }
   }
 
