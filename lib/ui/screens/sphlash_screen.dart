@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:task_manager/ui/screens/controlers/auth_controler.dart';
+import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/assets_path.dart';
 import '../utils/screen_background.dart';
@@ -24,11 +26,16 @@ class _SphlashScreenState extends State<SphlashScreen> {
 
   Future<void> _moveToNextScreen() async {
     await Future.delayed(Duration(seconds: 3));
-    Navigator.pushNamedAndRemoveUntil (
-      context,
-      SignInScreen.name,
-      (predicate) => false,
-    );
+    bool isLoggedIn = await AuthController.isUserLoggedIn();
+    if(isLoggedIn){
+      Navigator.pushReplacementNamed(context, MainNavBarHolderScreen.name);
+    }else{
+      Navigator.pushNamedAndRemoveUntil (
+        context,
+        SignInScreen.name,
+            (predicate) => false,
+      );
+    }
   }
 
   @override
