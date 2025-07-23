@@ -8,6 +8,7 @@ import 'package:task_manager/ui/screens/forgot_password_email.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 import '../../data/services/urls.dart';
@@ -72,9 +73,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onTapSignInButton,
-                    child: Icon(Icons.arrow_circle_right_outlined),
+                  Visibility(
+                    visible: _signInProgress==false,
+                    replacement: CenterCircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapSignInButton,
+                      child: Icon(Icons.arrow_circle_right_outlined),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -124,8 +129,8 @@ class _SignInScreenState extends State<SignInScreen> {
     if(_formKey.currentState!.validate()){
       _signIn();
     }
-
   }
+
   Future<void> _signIn() async {
     _signInProgress = true;
     setState(() {});
@@ -133,16 +138,16 @@ class _SignInScreenState extends State<SignInScreen> {
       'email':_emailTEcontroller.text.trim(),
       "password":_passwordTEcontroller.text,
     };
-    NetworkResponse response = await NetworkCaller.postRequest(url: Url.loginUrl,body: requestBody);
+    NetworkResponse response = await NetworkCaller.postRequest(url: Url.loginUrl,body: requestBody,isFromLogin: true);
     if(response.isSuccess){
       UserModel userModel = UserModel.fromJson(response.body!['data']);
       String token = response.body!['token'];
       await AuthController.saveUserData(userModel, token);
       Navigator.pushNamedAndRemoveUntil(context, MainNavBarHolderScreen.name, (predicate)=> false);
     }else{
-      _signInProgress;
+      _signInProgress == false;
       setState(() {});
-      showSnackBarMessage(context, response.errorMessage.toString());
+      showSnackBarMessage(context, response.errorMessage!);
     }
 
   }
@@ -157,7 +162,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailTEcontroller.dispose();
     _passwordTEcontroller.dispose();
     super.dispose();

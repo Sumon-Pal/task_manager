@@ -23,7 +23,8 @@ class AuthController {
     );
     accessToken = sharedPreferences.getString(_tokenKey);
   }
-  static Future<bool> isUserLoggedIn()async{
+
+  static Future<bool> isUserLoggedIn() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString(_tokenKey);
     if(token != null){
@@ -33,9 +34,11 @@ class AuthController {
       return false;
     }
   }
+
   static Future<void> clearData()async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.clear();
+    accessToken = null;
+    userModel = null;
   }
-
 }

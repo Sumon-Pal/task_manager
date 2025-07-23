@@ -7,6 +7,7 @@ import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 import '../../data/services/urls.dart';
+import '../widgets/center_circular_progress_indicator.dart';
 
 class SignUpScreen extends StatefulWidget {
   static final String name = '/sign-up';
@@ -111,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(height: 16),
                   Visibility(
                     visible: _signUpInProgress == false,
-                    replacement: Center(child: CircularProgressIndicator()),
+                    replacement: CenterCircularProgressIndicator(),
                     child: ElevatedButton(
                       onPressed: _onTapSignUpButton,
                       child: Icon(Icons.arrow_circle_right_outlined),
@@ -202,3 +203,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 }
+
