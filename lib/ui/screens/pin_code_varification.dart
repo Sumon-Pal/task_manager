@@ -62,7 +62,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     backgroundColor: Colors.transparent,
                     controller: _otplTEcontroller,
                     onCompleted: (v) {
-                      print("Completed");
+                     // print("Completed");
                     },
                     appContext: context,
                   ),

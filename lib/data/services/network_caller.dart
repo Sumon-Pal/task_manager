@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:task_manager/app.dart';
-import 'package:task_manager/ui/screens/controlers/auth_controler.dart';
+import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 
 class NetworkResponse {
@@ -24,15 +24,16 @@ class NetworkCaller {
   static const String _unAuthorizedMessage = 'Un-authorized Token';
 
   static Future<NetworkResponse> getRequest({required String url}) async {
-    print("==========================\n");
-    print(AuthController.accessToken);
-    print("==========================\n");
+    final Map<String, String> headers ={
+      'content-Type':'application/json',
+      'token': AuthController.accessToken ?? '',
+    };
     try {
       Uri uri = Uri.parse(url);
 
       _logRequest(url, null,null);
 
-      Response response = await get(uri);
+      Response response = await get(uri,headers: headers);
 
       _logResponse(url, response, );
 
@@ -70,9 +71,7 @@ class NetworkCaller {
 
 
   static Future<NetworkResponse> postRequest({required String url, Map<String, String>? body, bool isFromLogin = false}) async {
-    print("==========================\n");
-    print(AuthController.accessToken);
-    print("==========================\n");
+
     final Map<String, String> headers ={
       'content-Type':'application/json',
       'token': AuthController.accessToken ?? '',

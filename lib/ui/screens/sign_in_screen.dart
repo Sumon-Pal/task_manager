@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/data/services/models/user_model.dart';
 import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/ui/screens/controlers/auth_controler.dart';
+import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screens/forgot_password_email.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';

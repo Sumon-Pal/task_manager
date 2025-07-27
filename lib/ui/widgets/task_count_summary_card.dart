@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TaskCountSammeryCard extends StatelessWidget {
-  const TaskCountSammeryCard({
+class TaskCountSummaryCard extends StatelessWidget {
+  const TaskCountSummaryCard({
     super.key,
     required this.title,
     required this.count,
@@ -13,8 +13,8 @@ class TaskCountSammeryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
-      color: Colors.white,
+      //elevation: 0,
+      color: Colors.green,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

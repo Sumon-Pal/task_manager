@@ -106,7 +106,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       url:Url.addNewTaskUrl,
       body: requestBody,
     );
-    print(response.body);
 
     _addNewTaskInProgress = false;
     setState(() {});
