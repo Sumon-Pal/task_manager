@@ -67,7 +67,10 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
                   itemBuilder: (context, index) {
                     return TaskCard(
                       taskType: TaskType.tNew,
-                      taskModel: _newTaskList[index],
+                      taskModel: _newTaskList[index], onStatusUpdate: () {
+                        _getNewTaskList();
+                        _getTaskStatusCountList();
+                    },
                     );
                   },
                 ),
@@ -102,11 +105,15 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
       }
       _newTaskList = list;
     } else {
-      showSnackBarMessage(context, response.errorMessage!);
+      if(mounted) {
+        showSnackBarMessage(context, response.errorMessage!);
+      }
     }
 
     _getNewTaskInProgress=false;
-    setState(() {});
+    if(mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _getTaskStatusCountList() async {
@@ -122,12 +129,16 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
       List<TaskStatusCountModel> list = [];
       for (Map<String, dynamic> jsonData in response.body!['data']) {
         list.add(TaskStatusCountModel.fromJson(jsonData));
-      }
+            }
       _taskStatusCountList = list;
     } else {
-      showSnackBarMessage(context, response.errorMessage!);
+      if(mounted) {
+        showSnackBarMessage(context, response.errorMessage!);
+      }
     }
     _getTaskStatusCountInProgress = false;
-    setState(() {});
+    if(mounted) {
+      setState(() {});
+    }
   }
 }

@@ -32,7 +32,7 @@ class _CancleTaskScreenState extends State<CancleTaskScreen> {
         child: ListView.builder(
           itemCount: _cancleTaskList.length,
           itemBuilder: (context, index) {
-            return TaskCard(taskType: TaskType.cancelled, taskModel: _cancleTaskList[index],);
+            return TaskCard(taskType: TaskType.cancelled, taskModel: _cancleTaskList[index], onStatusUpdate: () { _getCancleTaskList(); },);
           },
         ),
       ),
