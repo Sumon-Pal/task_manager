@@ -1,7 +1,12 @@
-import 'package:email_validator/email_validator.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/data/services/urls.dart';
+import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
+import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -14,14 +19,24 @@ class UpdateProfileScreen extends StatefulWidget {
 }
 
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
-  final TextEditingController _emailTEcontroller = TextEditingController();
-  final TextEditingController _firstNameTEcontroller = TextEditingController();
-  final TextEditingController _lastNameTEcontroller = TextEditingController();
-  final TextEditingController _mobileTEcontroller = TextEditingController();
-  final TextEditingController _passwordTEcontroller = TextEditingController();
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _firstNameTEController = TextEditingController();
+  final TextEditingController _lastNameTEController = TextEditingController();
+  final TextEditingController _mobileTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _selectedImage;
+  bool _getUpdateProfileInProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailTEController.text = AuthController.userModel?.email??'';
+    _firstNameTEController.text = AuthController.userModel?.firstName??'';
+    _lastNameTEController.text = AuthController.userModel?.lastName??'';
+    _mobileTEController.text = AuthController.userModel?.mobile??'';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,71 +62,70 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   _buildPhotoPicker(),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _emailTEcontroller,
+                    enabled: false,
+                    controller: _emailTEController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Email'),
-                    validator: (String? value) {
-                      String email = value ?? '';
-                      if (EmailValidator.validate(email) == false) {
-                        return 'Enter a valid email';
-                      }
-                      return null;
-                    },
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _firstNameTEcontroller,
+                    controller: _firstNameTEController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'First Name'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 2) {
+                        return 'Enter a valid Name';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _lastNameTEcontroller,
+                    controller: _lastNameTEController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Last Name'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 2) {
+                        return 'Enter a valid Name';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _mobileTEcontroller,
+                    controller: _mobileTEController,
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Mobile'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      if ((value?.length ?? 0) <= 10) {
+                        return 'Enter a valid Mobile Number';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _passwordTEcontroller,
+                    controller: _passwordTEController,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(hintText: 'PassWord'),
                     validator: (String? value) {
-                      if ((value?.length ?? 0) <= 6) {
-                        return 'Enter a valid password';
+                      int length = value?.length ?? 0;
+                      if (length>0 && length <= 7) {
+                        return 'Enter a password more than 7 letters';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onTapSignUpButton,
-                    child: Icon(Icons.arrow_circle_right_outlined),
+                  Visibility(
+                    visible: _getUpdateProfileInProgress == false,
+                    replacement: CenterCircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapSignUpButton,
+                      child: Icon(Icons.arrow_circle_right_outlined),
+                    ),
                   ),
                 ],
               ),
@@ -176,20 +190,58 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
+  Future<void> _updateProfile() async {
+    _getUpdateProfileInProgress = true;
+    if(mounted){
+      setState(() {});
+    }
+    Map<String, String> requestBody={
+      "email":_emailTEController.text.trim(),
+      "firstName":_firstNameTEController.text.trim(),
+      "lastName":_lastNameTEController.text.trim(),
+      "mobile":_mobileTEController.text.trim(),
+    };
+    if(_passwordTEController.text.isNotEmpty){
+      requestBody['password']= _passwordTEController.text;
+    }
+    if(_selectedImage != null){
+      List<int> imageBytes =await _selectedImage!.readAsBytes();
+      requestBody['photo']=base64Encode(imageBytes);
+    }
+
+    NetworkResponse response = await NetworkCaller.postRequest(url: Url.getUpdateProfileUrl,body: requestBody);
+    _getUpdateProfileInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+    if(response.isSuccess){
+      _passwordTEController.clear();
+      if(mounted){
+        showSnackBarMessage(context, 'Profile Update Success');
+      }
+    }else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage!);
+      }
+    }
+
+  }
+
+
   void _onTapSignUpButton() {
     if (_formKey.currentState!.validate()) {
-      //TODO: Sign in with API
+      _updateProfile();
     }
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    _emailTEcontroller.dispose();
-    _firstNameTEcontroller.dispose();
-    _lastNameTEcontroller.dispose();
-    _mobileTEcontroller.dispose();
-    _passwordTEcontroller.dispose();
+    _emailTEController.dispose();
+    _firstNameTEController.dispose();
+    _lastNameTEController.dispose();
+    _mobileTEController.dispose();
+    _passwordTEController.dispose();
     super.dispose();
   }
 }
