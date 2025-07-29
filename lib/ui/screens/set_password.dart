@@ -1,22 +1,29 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
+
+import '../../data/services/network_caller.dart';
+import '../widgets/snack_bar_message.dart';
 
 class SetPassword extends StatefulWidget {
-  static final String name = '/set-password';
+  //static final String name = '/set-password';
+  final String email,otp;
 
-  const SetPassword({super.key});
+  const SetPassword({super.key, required this.email, required this.otp});
 
   @override
   State<SetPassword> createState() => _SetPasswordState();
 }
 
 class _SetPasswordState extends State<SetPassword> {
-  final TextEditingController _confirmPasswordTEcontroller =
+  final TextEditingController _confirmPasswordTEController =
       TextEditingController();
-  final TextEditingController _passwordTEcontroller = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _getSetPasswordInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class _SetPasswordState extends State<SetPassword> {
                   ),
                   const SizedBox(height: 28),
                   TextFormField(
-                    controller: _passwordTEcontroller,
+                    controller: _passwordTEController,
                     obscureText: true,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Password'),
@@ -59,21 +66,25 @@ class _SetPasswordState extends State<SetPassword> {
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _confirmPasswordTEcontroller,
+                    controller: _confirmPasswordTEController,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(hintText: 'Confirm Password'),
                     validator: (String? value) {
-                      if ((value ?? '') != _passwordTEcontroller.text) {
+                      if ((value ?? '') != _passwordTEController.text) {
                         return 'Confirm Password not match';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onTapConfirmButton,
-                    child: Text('Confirm'),
+                  Visibility(
+                    visible: _getSetPasswordInProgress ==false,
+                    replacement: CenterCircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapConfirmButton,
+                      child: Text('Confirm'),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -110,6 +121,7 @@ class _SetPasswordState extends State<SetPassword> {
   }
 
   void _onTapConfirmButton() {
+    _setPassword();
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }
 
@@ -117,11 +129,39 @@ class _SetPasswordState extends State<SetPassword> {
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }
 
+  Future<void> _setPassword() async {
+    _getSetPasswordInProgress = true;
+    if(mounted){
+      setState(() {});
+    }
+    Map<String, String> requestBody={
+      "email":widget.email,
+      "OTP": widget.otp,
+      "password":_passwordTEController.text
+    };
+
+    NetworkResponse response = await NetworkCaller.postRequest(url:Url.setPasswordUrl,body: requestBody);
+    _getSetPasswordInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+    if(response.isSuccess){
+      _passwordTEController.clear();
+      if(mounted){
+        showSnackBarMessage(context, 'Password Updated');
+      }
+    }else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage!);
+      }
+    }
+
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
-    _confirmPasswordTEcontroller.dispose();
-    _passwordTEcontroller.dispose();
+    _confirmPasswordTEController.dispose();
+    _passwordTEController.dispose();
     super.dispose();
   }
 }

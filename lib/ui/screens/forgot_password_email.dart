@@ -1,9 +1,13 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/ui/screens/pin_code_varification.dart';
+import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/data/services/urls.dart';
+import 'package:task_manager/ui/screens/pin_code_verification.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 class ForgotPasswordEmailScreen extends StatefulWidget {
   static final String name = '/forgot-password-email';
@@ -16,8 +20,9 @@ class ForgotPasswordEmailScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
-  final TextEditingController _emailTEcontroller = TextEditingController();
+  final TextEditingController emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _getEmailAddressValidateInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
                   ),
                   const SizedBox(height: 28),
                   TextFormField(
-                    controller: _emailTEcontroller,
+                    controller: emailTEController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Email'),
                     validator: (String? value) {
@@ -60,9 +65,13 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
                   ),
 
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onTapSubmitButton,
-                    child: Icon(Icons.arrow_circle_right_outlined),
+                  Visibility(
+                    visible: _getEmailAddressValidateInProgress == false,
+                    replacement: CircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapSubmitButton,
+                      child: Icon(Icons.arrow_circle_right_outlined),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -99,20 +108,56 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   }
 
   void _onTapSubmitButton() {
-    // if(_formKey.currentState!.validate()){
-    //   //TODO: Sign in with API
-    // }
-    Navigator.pushReplacementNamed(context, PinVerificationScreen.name);
+    if(_formKey.currentState!.validate()){
+      _emailAddressValidate();
+    }
   }
 
   void _onTapSignInButton() {
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }
 
+  Future<void> _emailAddressValidate() async {
+    _getEmailAddressValidateInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
+    NetworkResponse response = await NetworkCaller.getRequest(
+      url: Url.getRecoveryVerifyEmailUrl(emailTEController.text.trim()),
+    );
+    if(response.isSuccess){
+      if(mounted){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PinVerificationScreen(email: emailTEController.text.trim()),
+          ),
+        );
+        // Navigator.pushReplacementNamed(context, PinVerificationScreen.name,arguments: emailTEController.text.trim());
+        showSnackBarMessage(context, 'A 6 digit OTP code sent to your email');
+        sendOtp();
+      }
+    }else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage!);
+      }
+    }
+    _getEmailAddressValidateInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+  }
+
+  EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
+  void sendOtp() async {
+    bool result = await emailAuth.sendOtp(
+        recipientMail: emailTEController.value.text, otpLength: 6
+    );
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
-    _emailTEcontroller.dispose();
+    emailTEController.dispose();
     super.dispose();
   }
 }

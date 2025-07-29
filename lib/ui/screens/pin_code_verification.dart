@@ -1,25 +1,34 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/screens/set_password.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
+import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
+
+import '../../data/services/network_caller.dart';
+import '../widgets/snack_bar_message.dart';
 
 class PinVerificationScreen extends StatefulWidget {
-  static final String name = '/pin-verification';
+  //static final String name = '/pin-verification';
+  final String email;
 
-  const PinVerificationScreen({super.key});
+  const PinVerificationScreen({super.key, required this.email});
 
   @override
   State<PinVerificationScreen> createState() => _PinVerificationScreenState();
 }
 
 class _PinVerificationScreenState extends State<PinVerificationScreen> {
-  final TextEditingController _otplTEcontroller = TextEditingController();
+  final TextEditingController _otpTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _getVerifyOtpInProgress = false;
+
 
   @override
   Widget build(BuildContext context) {
+    //final String _email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: ScreenBackground(
         child: SingleChildScrollView(
@@ -60,7 +69,7 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                     ),
                     animationDuration: Duration(milliseconds: 300),
                     backgroundColor: Colors.transparent,
-                    controller: _otplTEcontroller,
+                    controller: _otpTEController,
                     onCompleted: (v) {
                      // print("Completed");
                     },
@@ -68,9 +77,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                   ),
 
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _onTapSubmitButton,
-                    child: Text('Verify'),
+                  Visibility(
+                    visible: _getVerifyOtpInProgress == false,
+                    replacement: CenterCircularProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapSubmitButton,
+                      child: Text('Verify'),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -107,20 +120,55 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
   }
 
   void _onTapSubmitButton() {
-    // if(_formKey.currentState!.validate()){
-    //   //TODO: Sign in with API
-    // }
-    Navigator.pushReplacementNamed(context, SetPassword.name);
+    if(_formKey.currentState!.validate()){
+      _otpVerify();
+    }
   }
 
   void _onTapSignInButton() {
     Navigator.pushReplacementNamed(context, SignInScreen.name);
   }
 
+  // EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
+  // bool verifyOtp() {
+  //   return emailAuth.validateOtp(
+  //     recipientMail:widget.email,
+  //     userOtp: _otpTEController.text.trim(),
+  //   );
+  // }
+
+  Future<void> _otpVerify() async {
+    _getVerifyOtpInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
+    NetworkResponse response = await NetworkCaller.getRequest(
+      url:Url.getVerifyOtpUrl(widget.email, _otpTEController.text),
+    );
+    if(response.isSuccess){
+      if(mounted){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SetPassword(email:widget.email, otp:_otpTEController.text,),
+          ),
+        );
+        showSnackBarMessage(context, 'OTP Verification Successful');
+      }
+    }else{
+      if(mounted){
+        showSnackBarMessage(context, response.errorMessage!);
+      }
+    }
+    _getVerifyOtpInProgress = false;
+    if(mounted){
+      setState(() {});
+    }
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
-    _otplTEcontroller.dispose();
+    _otpTEController.dispose();
     super.dispose();
   }
 }

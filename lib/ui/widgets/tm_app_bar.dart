@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screens/update_profile_screen.dart';
@@ -24,7 +26,13 @@ class _TMAppBarState extends State<TMAppBar> {
         backgroundColor: Colors.green,
         title: Row(
           children: [
-            CircleAvatar(),
+            CircleAvatar(
+              backgroundImage: AuthController.userModel?.photo == null
+                  ? null
+                  : MemoryImage(
+                      base64Decode(AuthController.userModel?.photo ?? ''),
+                    ),
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Column(
@@ -56,7 +64,7 @@ class _TMAppBarState extends State<TMAppBar> {
     );
   }
 
-  Future<void> _onTapSignOut()async {
+  Future<void> _onTapSignOut() async {
     await AuthController.clearData();
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -64,9 +72,10 @@ class _TMAppBarState extends State<TMAppBar> {
       (predicate) => false,
     );
   }
-  void _onTapUpdateProfile(){
-    if(ModalRoute.of(context)?.settings.name != UpdateProfileScreen.name) {
-       Navigator.pushNamed(context, UpdateProfileScreen.name);
+
+  void _onTapUpdateProfile() {
+    if (ModalRoute.of(context)?.settings.name != UpdateProfileScreen.name) {
+      Navigator.pushNamed(context, UpdateProfileScreen.name);
     }
     //Navigator.pushNamed(context, UpdateProfileScreen.name);
   }
