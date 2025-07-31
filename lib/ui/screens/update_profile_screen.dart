@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:task_manager/data/services/models/user_model.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
@@ -32,10 +33,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _emailTEController.text = AuthController.userModel?.email??'';
-    _firstNameTEController.text = AuthController.userModel?.firstName??'';
-    _lastNameTEController.text = AuthController.userModel?.lastName??'';
-    _mobileTEController.text = AuthController.userModel?.mobile??'';
+    _emailTEController.text = AuthController.userModel?.email ?? '';
+    _firstNameTEController.text = AuthController.userModel?.firstName ?? '';
+    _lastNameTEController.text = AuthController.userModel?.lastName ?? '';
+    _mobileTEController.text = AuthController.userModel?.mobile ?? '';
   }
 
   @override
@@ -112,7 +113,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     decoration: InputDecoration(hintText: 'PassWord'),
                     validator: (String? value) {
                       int length = value?.length ?? 0;
-                      if (length>0 && length <= 7) {
+                      if (length > 0 && length <= 7) {
                         return 'Enter a password more than 7 letters';
                       }
                       return null;
@@ -192,41 +193,54 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<void> _updateProfile() async {
     _getUpdateProfileInProgress = true;
-    if(mounted){
+    if (mounted) {
       setState(() {});
     }
-    Map<String, String> requestBody={
-      "email":_emailTEController.text.trim(),
-      "firstName":_firstNameTEController.text.trim(),
-      "lastName":_lastNameTEController.text.trim(),
-      "mobile":_mobileTEController.text.trim(),
+    Map<String, String> requestBody = {
+      "email": _emailTEController.text.trim(),
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
+      "mobile": _mobileTEController.text.trim(),
     };
-    if(_passwordTEController.text.isNotEmpty){
-      requestBody['password']= _passwordTEController.text;
+    if (_passwordTEController.text.isNotEmpty) {
+      requestBody['password'] = _passwordTEController.text;
     }
-    if(_selectedImage != null){
-      List<int> imageBytes =await _selectedImage!.readAsBytes();
-      requestBody['photo']=base64Encode(imageBytes);
+    List<int> imageBytes = [];
+    if (_selectedImage != null) {
+      imageBytes = await _selectedImage!.readAsBytes();
+      requestBody['photo'] = base64Encode(imageBytes);
     }
 
-    NetworkResponse response = await NetworkCaller.postRequest(url: Url.getUpdateProfileUrl,body: requestBody);
+    NetworkResponse response = await NetworkCaller.postRequest(
+      url: Url.getUpdateProfileUrl,
+      body: requestBody,
+    );
     _getUpdateProfileInProgress = false;
-    if(mounted){
+    if (mounted) {
       setState(() {});
     }
-    if(response.isSuccess){
+    if (response.isSuccess) {
+      UserModel userModel = UserModel(
+        id: AuthController.userModel!.id,
+        email: _emailTEController.text,
+        firstName: _firstNameTEController.text.trim(),
+        lastName: _lastNameTEController.text.trim(),
+        mobile: _mobileTEController.text,
+        // photo: imageBytes == null
+        //     ? AuthController.userModel?.photo
+        //     : base64Encode(imageBytes),
+      );
+      await AuthController.updateUserData(userModel);
       _passwordTEController.clear();
-      if(mounted){
+      if (mounted) {
         showSnackBarMessage(context, 'Profile Update Success');
       }
-    }else{
-      if(mounted){
+    } else {
+      if (mounted) {
         showSnackBarMessage(context, response.errorMessage!);
       }
     }
-
   }
-
 
   void _onTapSignUpButton() {
     if (_formKey.currentState!.validate()) {

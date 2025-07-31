@@ -128,7 +128,7 @@ class NetworkCaller {
     Navigator.of(TaskManager.navigator.currentContext!).pushNamedAndRemoveUntil(SignInScreen.name, (predicate)=>false);
   }
 
-  static void _logRequest(String url, Map<String, String>? body,Map<String, String>? headers){
+  static void _logRequest(String url, Map<String,String>?body, Map<String, String>? headers){
     debugPrint("==================== REQUEST ======================'\n'"
         "URL:$url\n"
         "HEADERS:$headers\n"
