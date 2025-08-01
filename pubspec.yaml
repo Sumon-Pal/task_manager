@@ -23,6 +23,8 @@ dependencies:
   http: ^1.4.0
   shared_preferences: ^2.5.3
   email_auth: ^2.0.0
+  get: ^4.7.2
+
 
 dev_dependencies:
   flutter_test:

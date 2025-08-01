@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/data/services/models/user_model.dart';
@@ -205,9 +206,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (_passwordTEController.text.isNotEmpty) {
       requestBody['password'] = _passwordTEController.text;
     }
-    List<int> imageBytes = [];
+    Uint8List? imageBytes;
+    //List<int> imageBytes = [];
+    // if (_selectedImage != null) {
+    //   imageBytes = await _selectedImage!.readAsBytes();
+    //   requestBody['photo'] = base64Encode(imageBytes);
+    // }
     if (_selectedImage != null) {
-      imageBytes = await _selectedImage!.readAsBytes();
+      imageBytes = (await _selectedImage!.readAsBytes());
       requestBody['photo'] = base64Encode(imageBytes);
     }
 
@@ -226,9 +232,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         firstName: _firstNameTEController.text.trim(),
         lastName: _lastNameTEController.text.trim(),
         mobile: _mobileTEController.text,
-        // photo: imageBytes == null
-        //     ? AuthController.userModel?.photo
-        //     : base64Encode(imageBytes),
+        photo: imageBytes == null
+            ? AuthController.userModel?.photo
+            : base64Encode(imageBytes),
       );
       await AuthController.updateUserData(userModel);
       _passwordTEController.clear();
@@ -250,7 +256,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailTEController.dispose();
     _firstNameTEController.dispose();
     _lastNameTEController.dispose();

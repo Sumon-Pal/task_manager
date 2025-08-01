@@ -79,7 +79,7 @@ class NetworkCaller {
     try {
       Uri uri = Uri.parse(url);
 
-      _logRequest(url, null,headers);
+      _logRequest(url, body,headers);
 
       Response response = await post(
         uri,

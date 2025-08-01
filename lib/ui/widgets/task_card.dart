@@ -153,7 +153,7 @@ class _TaskCardState extends State<TaskCard> {
     return widget.taskType == type ? Icon(Icons.check) : null;
   }
 
-  // void _onTapTaskStatus(TaskType type) {
+  // void _onTapTaskStatus(String type) {
   //     if (type == widget.taskType) {
   //       return;
   //     }
