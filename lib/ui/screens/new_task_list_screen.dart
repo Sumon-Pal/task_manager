@@ -8,6 +8,7 @@ import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart'
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 import '../widgets/task_card.dart';
 import '../widgets/task_count_summary_card.dart';
+import 'package:get/get.dart';
 
 class NewTaskListScreen extends StatefulWidget {
   const NewTaskListScreen({super.key});
@@ -87,7 +88,8 @@ class _NewTaskListScreenState extends State<NewTaskListScreen> {
   }
 
   void _onTabAddNewTaskButton() {
-    Navigator.pushNamed(context, AddNewTaskScreen.name);
+    // Navigator.pushNamed(context, AddNewTaskScreen.name);
+    Get.toNamed(AddNewTaskScreen.name);
   }
 
   Future<void> _getNewTaskList() async {

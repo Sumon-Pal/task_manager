@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:task_manager/data/services/models/user_model.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/services/urls.dart';
-import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';

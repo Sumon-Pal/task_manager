@@ -1,9 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/services/models/user_model.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/ui/screens/controllers/auth_controller.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/sign_in_controller.dart';
 import 'package:task_manager/ui/screens/forgot_password_email.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
@@ -11,10 +10,9 @@ import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
-import '../../data/services/urls.dart';
-
 class SignInScreen extends StatefulWidget {
   static final String name = '/sign-in';
+
   const SignInScreen({super.key});
 
   @override
@@ -22,10 +20,10 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController _emailTEcontroller = TextEditingController();
-  final TextEditingController _passwordTEcontroller = TextEditingController();
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _signInProgress = false;
+  final SignInController _signInController = Get.find<SignInController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,19 +39,19 @@ class _SignInScreenState extends State<SignInScreen> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 150,),
+                  const SizedBox(height: 150),
                   Text(
                     'Get Started With',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 42),
                   TextFormField(
-                    controller: _emailTEcontroller,
+                    controller: _emailTEController,
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(hintText: 'Email'),
-                    validator: (String? value){
+                    validator: (String? value) {
                       String email = value ?? '';
-                      if(EmailValidator.validate(email)==false){
+                      if (EmailValidator.validate(email) == false) {
                         return 'Enter a valid email';
                       }
                       return null;
@@ -61,25 +59,29 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
-                    controller: _passwordTEcontroller,
+                    controller: _passwordTEController,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
                     decoration: InputDecoration(hintText: 'Password'),
-                    validator: (String? value){
-                      if((value?.length ?? 0)<=6){
+                    validator: (String? value) {
+                      if ((value?.length ?? 0) <= 6) {
                         return 'Enter a valid password';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _signInProgress==false,
-                    replacement: CenterCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapSignInButton,
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                  GetBuilder<SignInController>(
+                    builder: (context) {
+                      return Visibility(
+                        visible: _signInController.inProgress == false,
+                        replacement: CenterCircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapSignInButton,
+                          child: Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    }
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -125,31 +127,25 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
   void _onTapSignInButton() {
-    if(_formKey.currentState!.validate()){
+    if (_formKey.currentState!.validate()) {
       _signIn();
     }
   }
 
   Future<void> _signIn() async {
-    _signInProgress = true;
-    setState(() {});
-    Map<String,String> requestBody ={
-      'email':_emailTEcontroller.text.trim(),
-      "password":_passwordTEcontroller.text,
-    };
-    NetworkResponse response = await NetworkCaller.postRequest(url: Url.loginUrl,body: requestBody,isFromLogin: true);
-    if(response.isSuccess){
-      UserModel userModel = UserModel.fromJson(response.body!['data']);
-      String token = response.body!['token'];
-      await AuthController.saveUserData(userModel, token);
-      Navigator.pushNamedAndRemoveUntil(context, MainNavBarHolderScreen.name, (predicate)=> false);
+    final bool isSuccess = await _signInController.signIn(
+      email: _emailTEController.text.trim(),
+      password: _passwordTEController.text,
+    );
+    if(isSuccess){
+      Get.offAllNamed(MainNavBarHolderScreen.name);
     }else{
-      _signInProgress == false;
-      setState(() {});
-      showSnackBarMessage(context, response.errorMessage!);
+      if(mounted){
+        showSnackBarMessage(context, _signInController.errorMessage!);
+      }
     }
-
   }
 
   void _onTapForgotPasswordButton() {
@@ -162,8 +158,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
-    _emailTEcontroller.dispose();
-    _passwordTEcontroller.dispose();
+    _emailTEController.dispose();
+    _passwordTEController.dispose();
     super.dispose();
   }
 }
