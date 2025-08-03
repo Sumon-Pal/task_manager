@@ -26,7 +26,6 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final String _email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: ScreenBackground(
         child: SingleChildScrollView(
@@ -36,7 +35,6 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 150),

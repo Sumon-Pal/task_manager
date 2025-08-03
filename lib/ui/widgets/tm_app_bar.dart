@@ -1,16 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screens/update_profile_screen.dart';
-
 import '../screens/sign_in_screen.dart';
 
 class TMAppBar extends StatefulWidget implements PreferredSizeWidget {
   const TMAppBar({super.key});
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
@@ -66,17 +64,12 @@ class _TMAppBarState extends State<TMAppBar> {
 
   Future<void> _onTapSignOut() async {
     await AuthController.clearData();
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      SignInScreen.name,
-      (predicate) => false,
-    );
+    Get.offAllNamed(SignInScreen.name);
   }
 
   void _onTapUpdateProfile() {
     if (ModalRoute.of(context)?.settings.name != UpdateProfileScreen.name) {
-      Navigator.pushNamed(context, UpdateProfileScreen.name);
+      Get.offNamed(UpdateProfileScreen.name);
     }
-    //Navigator.pushNamed(context, UpdateProfileScreen.name);
   }
 }

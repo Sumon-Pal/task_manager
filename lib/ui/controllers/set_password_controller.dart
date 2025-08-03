@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/services/urls.dart';
 
-class SetPasswordController extends GetxController{
+class SetPasswordController extends GetxController {
   bool _inProgress = false;
   String? _errorMessage;
 
   bool get inProgress => _inProgress;
-  String? get errorMessage=> _errorMessage;
+
+  String? get errorMessage => _errorMessage;
 
   Future<bool> setPassword(String email, String password, String otp) async {
     bool isSuccess = false;

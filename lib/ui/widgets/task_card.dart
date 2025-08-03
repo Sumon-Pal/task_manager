@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task_manager/data/models/models/task_model.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/controllers/delete_task_controller.dart';
 import 'package:task_manager/ui/controllers/update_task_stasus_controller.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
@@ -27,10 +25,10 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  final UpdateTaskStatusController _updateTaskStatusController = Get.find<
-      UpdateTaskStatusController>();
-  final DeleteTaskController _deleteTaskController = Get.find<
-      DeleteTaskController>();
+  final UpdateTaskStatusController _updateTaskStatusController =
+      Get.find<UpdateTaskStatusController>();
+  final DeleteTaskController _deleteTaskController =
+      Get.find<DeleteTaskController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +42,7 @@ class _TaskCardState extends State<TaskCard> {
           children: [
             Text(
               widget.taskModel.title,
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .titleMedium,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Text(
               widget.taskModel.description,
@@ -69,24 +64,27 @@ class _TaskCardState extends State<TaskCard> {
                 ),
                 Spacer(),
                 GetBuilder<DeleteTaskController>(
-                    builder: (controller) {
-                      return Visibility(
-                          visible: controller.inProgress == false,
-                          child: IconButton(onPressed: _deleteTask,
-                              icon: Icon(Icons.delete)));
-                    }
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.inProgress == false,
+                      child: IconButton(
+                        onPressed: _deleteTask,
+                        icon: Icon(Icons.delete),
+                      ),
+                    );
+                  },
                 ),
                 GetBuilder<UpdateTaskStatusController>(
-                    builder: (controller) {
-                      return Visibility(
-                        visible: controller.inProgress == false,
-                        replacement: CenterCircularProgressIndicator(),
-                        child: IconButton(
-                          onPressed: _showEditTaskStatusDialog,
-                          icon: Icon(Icons.edit),
-                        ),
-                      );
-                    }
+                  builder: (controller) {
+                    return Visibility(
+                      visible: controller.inProgress == false,
+                      replacement: CenterCircularProgressIndicator(),
+                      child: IconButton(
+                        onPressed: _showEditTaskStatusDialog,
+                        icon: Icon(Icons.edit),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -182,17 +180,12 @@ class _TaskCardState extends State<TaskCard> {
     return widget.taskType == type ? Icon(Icons.check) : null;
   }
 
-  // void _onTapTaskStatus(TaskType type) {
-  //     if (type == widget.taskType) {
-  //       return;
-  //     }
-  //     _updateTaskStatus(type.toString());
-  //   }
-
   Future<void> _updateTaskStatus(String Status) async {
     Navigator.pop(context);
     final bool isSuccess = await _updateTaskStatusController.updateTaskStatus(
-        widget.taskModel.id, Status);
+      widget.taskModel.id,
+      Status,
+    );
     if (isSuccess) {
       widget.onStatusUpdate();
     } else {
@@ -204,7 +197,8 @@ class _TaskCardState extends State<TaskCard> {
 
   Future<void> _deleteTask() async {
     final bool isSuccess = await _deleteTaskController.deleteTask(
-        widget.taskModel.id);
+      widget.taskModel.id,
+    );
     if (isSuccess) {
       showSnackBarMessage(context, 'Task Deleted');
     } else {

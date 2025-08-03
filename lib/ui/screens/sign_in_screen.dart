@@ -36,7 +36,6 @@ class _SignInScreenState extends State<SignInScreen> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 150),
@@ -149,11 +148,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTapForgotPasswordButton() {
-    Navigator.pushReplacementNamed(context, ForgotPasswordEmailScreen.name);
+    Get.offNamed(ForgotPasswordEmailScreen.name);
   }
 
   void _onTapSignUpButton() {
-    Navigator.pushReplacementNamed(context, SignUpScreen.name);
+    Get.offNamed(SignUpScreen.name);
   }
 
   @override

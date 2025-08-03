@@ -119,7 +119,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   }
 
   void _onTapSignInButton() {
-    Navigator.pushReplacementNamed(context, SignInScreen.name);
+    Get.offNamed(SignInScreen.name);
   }
 
   Future<void> _emailAddressValidate() async {

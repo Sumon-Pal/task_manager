@@ -3,13 +3,15 @@ import '../../data/models/models/task_model.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/services/urls.dart';
 
-class NewTaskListCountController extends GetxController{
+class NewTaskListCountController extends GetxController {
   bool _inProgress = false;
   List<TaskModel> _newTaskList = [];
   String? _errorMessage;
 
   bool get inProgress => _inProgress;
+
   String? get errorMessage => _errorMessage;
+
   List<TaskModel> get newTaskList => _newTaskList;
 
   Future<bool> getNewTaskList() async {
@@ -32,7 +34,7 @@ class NewTaskListCountController extends GetxController{
     } else {
       _errorMessage = response.errorMessage!;
     }
-    _inProgress =false;
+    _inProgress = false;
     update();
     return isSuccess;
   }

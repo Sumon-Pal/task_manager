@@ -31,7 +31,7 @@ class UpdateProfileController extends GetxController {
       "lastName": lastName,
       "mobile": mobile,
     };
-    if (password != null) {
+    if (password != null && password.isNotEmpty) {
       requestBody['password'] = password;
     }
     if (photo != null) {

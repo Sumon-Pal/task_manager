@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/services/urls.dart';
 
-class UpdateTaskStatusController extends GetxController{
+class UpdateTaskStatusController extends GetxController {
   bool _inProgress = false;
   String? _errorMessage;
 

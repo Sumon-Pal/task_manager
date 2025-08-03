@@ -1,13 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/controllers/set_password_controller.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
-
-import '../../data/services/network_caller.dart';
 import '../widgets/snack_bar_message.dart';
 
 class SetPassword extends StatefulWidget {

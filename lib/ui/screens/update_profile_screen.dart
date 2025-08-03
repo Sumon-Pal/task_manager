@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_manager/data/models/models/user_model.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
@@ -55,7 +51,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 150),
@@ -201,14 +196,19 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<void> _updateProfile() async {
     Uint8List? photo;
-    photo = await _selectedImage!.readAsBytes();
+
+    if (_selectedImage != null) {
+      photo = await _selectedImage!.readAsBytes();
+    }
 
     final bool isSuccess = await _updateProfileController.updateProfile(
       email: _emailTEController.text.trim(),
       firstName: _firstNameTEController.text.trim(),
       lastName: _lastNameTEController.text.trim(),
       mobile: _mobileTEController.text.trim(),
-      password: _passwordTEController.text,
+      password: _passwordTEController.text.trim().isEmpty
+          ? null
+          : _passwordTEController.text.trim(),
       photo: photo,
     );
     if (isSuccess) {

@@ -13,22 +13,22 @@ import 'package:task_manager/ui/controllers/task_status_count_controller.dart';
 import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 import 'package:task_manager/ui/controllers/update_task_stasus_controller.dart';
 
-class ControllerBinder extends Bindings{
+class ControllerBinder extends Bindings {
   @override
   void dependencies() {
-   Get.put(SignInController());
-   Get.put(NewTaskListCountController());
-   Get.put(TaskStatusCountController());
-   Get.put(AddNewTaskController());
-   Get.put(CancelTaskListController());
-   Get.put(CompletedTaskListController());
-   Get.put(ProgressTaskListController());
-   Get.put(ForgotPasswordEmailController());
-   Get.put(PinCodeVerificationController());
-   Get.put(SetPasswordController());
-   Get.put(SignInController());
-   Get.put(UpdateProfileController());
-   Get.put(UpdateTaskStatusController());
-   Get.put(DeleteTaskController());
+    Get.put(SignInController());
+    Get.put(NewTaskListCountController());
+    Get.put(TaskStatusCountController());
+    Get.put(AddNewTaskController());
+    Get.put(CancelTaskListController());
+    Get.put(CompletedTaskListController());
+    Get.put(ProgressTaskListController());
+    Get.put(ForgotPasswordEmailController());
+    Get.put(PinCodeVerificationController());
+    Get.put(SetPasswordController());
+    Get.put(SignInController());
+    Get.put(UpdateProfileController());
+    Get.put(UpdateTaskStatusController());
+    Get.put(DeleteTaskController());
   }
 }

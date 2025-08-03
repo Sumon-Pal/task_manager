@@ -9,7 +9,9 @@ class TaskStatusCountController extends GetxController {
   List<TaskStatusCountModel> _taskStatusCountList = [];
 
   bool get inProgress => _inProgress;
+
   String? get errorMessage => _errorMessage;
+
   List<TaskStatusCountModel> get taskStatusCountList => _taskStatusCountList;
 
   Future<bool> getTaskStatusCountList() async {

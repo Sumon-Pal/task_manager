@@ -13,15 +13,15 @@ class Url {
   static const String getTaskStatusCountUrl = '$_baseUrl/taskStatusCount';
   static const String getUpdateProfileUrl = '$_baseUrl/ProfileUpdate';
 
-  static String getUpdateTaskStatusUrl(String taskId, String status)=>
+  static String getUpdateTaskStatusUrl(String taskId, String status) =>
       '$_baseUrl/updateTaskStatus/$taskId/$status';
 
-  static String deleteTaskUrl(String taskId)=>
-      '$_baseUrl/deleteTask/$taskId';
+  static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';
 
-  static String getRecoveryVerifyEmailUrl(String email)=>
+  static String getRecoveryVerifyEmailUrl(String email) =>
       '$_baseUrl/RecoverVerifyEmail/$email';
-  static String getVerifyOtpUrl(String email,String otp)=>
+
+  static String getVerifyOtpUrl(String email, String otp) =>
       '$_baseUrl/RecoverVerifyOtp/$email/$otp';
   static const String setPasswordUrl = '$_baseUrl/RecoverResetPassword';
 }

@@ -12,7 +12,7 @@ import 'package:task_manager/ui/screens/update_profile_screen.dart';
 class TaskManager extends StatelessWidget {
   const TaskManager({super.key});
 
-   static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +55,9 @@ class TaskManager extends StatelessWidget {
         SignUpScreen.name: (context) => SignUpScreen(),
         ForgotPasswordEmailScreen.name: (context) =>
             ForgotPasswordEmailScreen(),
-        //PinVerificationScreen.name: (context) => PinVerificationScreen(),
-        //SetPassword.name: (context) => SetPassword(),
         MainNavBarHolderScreen.name: (context) => MainNavBarHolderScreen(),
         AddNewTaskScreen.name: (context) => AddNewTaskScreen(),
-        UpdateProfileScreen.name: (context)=> UpdateProfileScreen()
+        UpdateProfileScreen.name: (context) => UpdateProfileScreen(),
       },
       initialBinding: ControllerBinder(),
     );

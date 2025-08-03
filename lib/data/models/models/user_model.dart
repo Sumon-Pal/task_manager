@@ -1,4 +1,4 @@
-class UserModel{
+class UserModel {
   late String id;
   late String email;
   late String firstName;
@@ -6,8 +6,10 @@ class UserModel{
   late String mobile;
   String? photo;
 
-  String get fullName{
-    return '$firstName' ' ' '$lastName';
+  String get fullName {
+    return '$firstName'
+        ' '
+        '$lastName';
   }
 
   UserModel({
@@ -17,9 +19,9 @@ class UserModel{
     required this.lastName,
     required this.mobile,
     this.photo,
-});
+  });
 
-  UserModel.fromJson(Map<String,dynamic> jsonData){
+  UserModel.fromJson(Map<String, dynamic> jsonData) {
     id = jsonData['_id'];
     email = jsonData['email'];
     firstName = jsonData['firstName'];
@@ -28,14 +30,14 @@ class UserModel{
     photo = jsonData['photo'];
   }
 
-  Map<String,dynamic>toJson(){
-     return{
-       '_id': id,
-       'email':email,
-       'firstName':firstName,
-       'lastName':lastName,
-       'mobile': mobile,
-       'photo':photo,
-     };
-    }
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'email': email,
+      'firstName': firstName,
+      'lastName': lastName,
+      'mobile': mobile,
+      'photo': photo,
+    };
+  }
 }
