@@ -15,6 +15,10 @@ class Url {
 
   static String getUpdateTaskStatusUrl(String taskId, String status)=>
       '$_baseUrl/updateTaskStatus/$taskId/$status';
+
+  static String deleteTaskUrl(String taskId)=>
+      '$_baseUrl/deleteTask/$taskId';
+
   static String getRecoveryVerifyEmailUrl(String email)=>
       '$_baseUrl/RecoverVerifyEmail/$email';
   static String getVerifyOtpUrl(String email,String otp)=>

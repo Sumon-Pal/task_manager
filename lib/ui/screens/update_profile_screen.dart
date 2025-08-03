@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:task_manager/data/services/models/user_model.dart';
+import 'package:task_manager/data/models/models/user_model.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/services/urls.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:task_manager/ui/controllers/update_profile_controller.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
@@ -28,7 +31,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
   XFile? _selectedImage;
-  bool _getUpdateProfileInProgress = false;
+  final UpdateProfileController _updateProfileController =
+      Get.find<UpdateProfileController>();
 
   @override
   void initState() {
@@ -120,13 +124,17 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _getUpdateProfileInProgress == false,
-                    replacement: CenterCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapSignUpButton,
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                  GetBuilder<UpdateProfileController>(
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.inProgress == false,
+                        replacement: CenterCircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapSignUpButton,
+                          child: Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -192,52 +200,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   Future<void> _updateProfile() async {
-    _getUpdateProfileInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-    Map<String, String> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _mobileTEController.text.trim(),
-    };
-    if (_passwordTEController.text.isNotEmpty) {
-      requestBody['password'] = _passwordTEController.text;
-    }
-    List<int> imageBytes = [];
-    if (_selectedImage != null) {
-      imageBytes = await _selectedImage!.readAsBytes();
-      requestBody['photo'] = base64Encode(imageBytes);
-    }
+    Uint8List? photo;
+    photo = await _selectedImage!.readAsBytes();
 
-    NetworkResponse response = await NetworkCaller.postRequest(
-      url: Url.getUpdateProfileUrl,
-      body: requestBody,
+    final bool isSuccess = await _updateProfileController.updateProfile(
+      email: _emailTEController.text.trim(),
+      firstName: _firstNameTEController.text.trim(),
+      lastName: _lastNameTEController.text.trim(),
+      mobile: _mobileTEController.text.trim(),
+      password: _passwordTEController.text,
+      photo: photo,
     );
-    _getUpdateProfileInProgress = false;
-    if (mounted) {
-      setState(() {});
-    }
-    if (response.isSuccess) {
-      UserModel userModel = UserModel(
-        id: AuthController.userModel!.id,
-        email: _emailTEController.text,
-        firstName: _firstNameTEController.text.trim(),
-        lastName: _lastNameTEController.text.trim(),
-        mobile: _mobileTEController.text,
-        // photo: imageBytes == null
-        //     ? AuthController.userModel?.photo
-        //     : base64Encode(imageBytes),
-      );
-      await AuthController.updateUserData(userModel);
+    if (isSuccess) {
       _passwordTEController.clear();
       if (mounted) {
         showSnackBarMessage(context, 'Profile Update Success');
       }
     } else {
       if (mounted) {
-        showSnackBarMessage(context, response.errorMessage!);
+        showSnackBarMessage(context, _updateProfileController.errorMessage!);
       }
     }
   }
@@ -250,7 +231,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _emailTEController.dispose();
     _firstNameTEController.dispose();
     _lastNameTEController.dispose();

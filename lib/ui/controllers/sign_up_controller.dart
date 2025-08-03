@@ -1,10 +1,8 @@
 import 'package:get/get.dart';
-import '../../data/models/models/user_model.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/services/urls.dart';
-import 'auth_controller.dart';
 
-class SignInController extends GetxController {
+class SignUpController extends GetxController {
   bool _inProgress = false;
   String? _errorMessage;
 
@@ -12,27 +10,35 @@ class SignInController extends GetxController {
 
   String? get errorMessage => _errorMessage;
 
-  Future<bool> signIn({required String email, required String password}) async {
+  Future<bool> signUp({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String mobile,
+    required String password,
+  }) async {
     bool isSuccess = false;
     _inProgress = true;
     update();
-    Map<String, String> requestBody = {'email': email, "password": password};
+    Map<String, String> requestBody = {
+      "email": email,
+      "firstName": firstName,
+      "lastName": lastName,
+      "mobile": mobile,
+      "password": password,
+    };
     NetworkResponse response = await NetworkCaller.postRequest(
-      url: Url.loginUrl,
+      url: Url.registrationUrl,
       body: requestBody,
-      isFromLogin: true,
     );
+    _inProgress = false;
+    update();
     if (response.isSuccess) {
-      UserModel userModel = UserModel.fromJson(response.body!['data']);
-      String token = response.body!['token'];
-      await AuthController.saveUserData(userModel, token);
       isSuccess = true;
       _errorMessage = null;
     } else {
       _errorMessage = response.errorMessage!;
     }
-    _inProgress == false;
-    update();
     return isSuccess;
   }
 }

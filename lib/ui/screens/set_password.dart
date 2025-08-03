@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task_manager/data/services/urls.dart';
+import 'package:task_manager/ui/controllers/set_password_controller.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
@@ -9,8 +11,8 @@ import '../../data/services/network_caller.dart';
 import '../widgets/snack_bar_message.dart';
 
 class SetPassword extends StatefulWidget {
-  //static final String name = '/set-password';
-  final String email,otp;
+  static final String name = '/set-password';
+  final String email, otp;
 
   const SetPassword({super.key, required this.email, required this.otp});
 
@@ -23,7 +25,8 @@ class _SetPasswordState extends State<SetPassword> {
       TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _getSetPasswordInProgress = false;
+  final SetPasswordController _setPasswordController =
+      Get.find<SetPasswordController>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +39,6 @@ class _SetPasswordState extends State<SetPassword> {
               key: _formKey,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 150),
@@ -78,13 +80,17 @@ class _SetPasswordState extends State<SetPassword> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _getSetPasswordInProgress ==false,
-                    replacement: CenterCircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapConfirmButton,
-                      child: Text('Confirm'),
-                    ),
+                  GetBuilder<SetPasswordController>(
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.inProgress == false,
+                        replacement: CenterCircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapConfirmButton,
+                          child: Text('Confirm'),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -122,40 +128,29 @@ class _SetPasswordState extends State<SetPassword> {
 
   void _onTapConfirmButton() {
     _setPassword();
-    Navigator.pushReplacementNamed(context, SignInScreen.name);
+    Get.offNamed(SignInScreen.name);
   }
 
   void _onTapSignInButton() {
-    Navigator.pushReplacementNamed(context, SignInScreen.name);
+    Get.offNamed(SignInScreen.name);
   }
 
   Future<void> _setPassword() async {
-    _getSetPasswordInProgress = true;
-    if(mounted){
-      setState(() {});
-    }
-    Map<String, String> requestBody={
-      "email":widget.email,
-      "OTP": widget.otp,
-      "password":_passwordTEController.text
-    };
-
-    NetworkResponse response = await NetworkCaller.postRequest(url:Url.setPasswordUrl,body: requestBody);
-    _getSetPasswordInProgress = false;
-    if(mounted){
-      setState(() {});
-    }
-    if(response.isSuccess){
+    final bool isSuccess = await _setPasswordController.setPassword(
+      widget.email,
+      _passwordTEController.text,
+      widget.otp,
+    );
+    if (isSuccess) {
       _passwordTEController.clear();
-      if(mounted){
+      if (mounted) {
         showSnackBarMessage(context, 'Password Updated');
       }
-    }else{
-      if(mounted){
-        showSnackBarMessage(context, response.errorMessage!);
+    } else {
+      if (mounted) {
+        showSnackBarMessage(context, _setPasswordController.errorMessage!);
       }
     }
-
   }
 
   @override

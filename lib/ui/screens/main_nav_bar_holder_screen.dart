@@ -3,7 +3,7 @@ import 'package:task_manager/ui/screens/new_task_list_screen.dart';
 import 'package:task_manager/ui/screens/progress_task_screen.dart';
 
 import '../widgets/tm_app_bar.dart';
-import 'cancle_task_screen.dart';
+import 'cancel_task_screen.dart';
 import 'completed_task_screen.dart';
 
 class MainNavBarHolderScreen extends StatefulWidget {
@@ -21,7 +21,7 @@ class _MainNavBarHolderScreenState extends State<MainNavBarHolderScreen> {
     NewTaskListScreen(),
     ProgressTaskScreen(),
     CompletedTaskScreen(),
-    CancleTaskScreen(),
+    CancelTaskScreen(),
   ];
 
   @override

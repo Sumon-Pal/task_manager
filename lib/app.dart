@@ -50,7 +50,7 @@ class TaskManager extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        SphlashScreen.name: (context) => SphlashScreen(),
+        SplashScreen.name: (context) => SplashScreen(),
         SignInScreen.name: (context) => SignInScreen(),
         SignUpScreen.name: (context) => SignUpScreen(),
         ForgotPasswordEmailScreen.name: (context) =>

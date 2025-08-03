@@ -6,20 +6,18 @@ import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/assets_path.dart';
 import '../utils/screen_background.dart';
 
-class SphlashScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   static const String name = '/';
 
-  const SphlashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
-  State<SphlashScreen> createState() => _SphlashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SphlashScreenState extends State<SphlashScreen> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // TODO: implement initState
-    //
     super.initState();
     _moveToNextScreen();
   }
@@ -27,13 +25,13 @@ class _SphlashScreenState extends State<SphlashScreen> {
   Future<void> _moveToNextScreen() async {
     await Future.delayed(Duration(seconds: 3));
     bool isLoggedIn = await AuthController.isUserLoggedIn();
-    if(isLoggedIn){
+    if (isLoggedIn) {
       Navigator.pushReplacementNamed(context, MainNavBarHolderScreen.name);
-    }else{
-      Navigator.pushNamedAndRemoveUntil (
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
         context,
         SignInScreen.name,
-            (predicate) => false,
+        (predicate) => false,
       );
     }
   }

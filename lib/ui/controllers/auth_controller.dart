@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:task_manager/data/services/models/user_model.dart';
+import 'package:task_manager/data/models/models/user_model.dart';
 
 class AuthController {
   static UserModel? userModel;

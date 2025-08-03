@@ -2,8 +2,8 @@ import 'package:email_auth/email_auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/services/urls.dart';
+import 'package:get/get.dart';
+import 'package:task_manager/ui/controllers/forgot_password_email_controller.dart';
 import 'package:task_manager/ui/screens/pin_code_verification.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/screen_background.dart';
@@ -22,7 +22,8 @@ class ForgotPasswordEmailScreen extends StatefulWidget {
 class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   final TextEditingController emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _getEmailAddressValidateInProgress = false;
+  final ForgotPasswordEmailController _forgotPasswordEmailController =
+      Get.find<ForgotPasswordEmailController>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,13 +66,17 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
                   ),
 
                   const SizedBox(height: 16),
-                  Visibility(
-                    visible: _getEmailAddressValidateInProgress == false,
-                    replacement: CircularProgressIndicator(),
-                    child: ElevatedButton(
-                      onPressed: _onTapSubmitButton,
-                      child: Icon(Icons.arrow_circle_right_outlined),
-                    ),
+                  GetBuilder<ForgotPasswordEmailController>(
+                    builder: (controller) {
+                      return Visibility(
+                        visible: controller.inProgress == false,
+                        replacement: CircularProgressIndicator(),
+                        child: ElevatedButton(
+                          onPressed: _onTapSubmitButton,
+                          child: Icon(Icons.arrow_circle_right_outlined),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 32),
                   Center(
@@ -108,7 +113,7 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   }
 
   void _onTapSubmitButton() {
-    if(_formKey.currentState!.validate()){
+    if (_formKey.currentState!.validate()) {
       _emailAddressValidate();
     }
   }
@@ -118,40 +123,36 @@ class _ForgotPasswordEmailScreenState extends State<ForgotPasswordEmailScreen> {
   }
 
   Future<void> _emailAddressValidate() async {
-    _getEmailAddressValidateInProgress = true;
-    if (mounted) {
-      setState(() {});
-    }
-    NetworkResponse response = await NetworkCaller.getRequest(
-      url: Url.getRecoveryVerifyEmailUrl(emailTEController.text.trim()),
-    );
-    if(response.isSuccess){
-      if(mounted){
+    final bool isSuccess = await _forgotPasswordEmailController
+        .emailAddressValidate(email: emailTEController.text.trim());
+    if (isSuccess) {
+      if (mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PinVerificationScreen(email: emailTEController.text.trim()),
+            builder: (context) =>
+                PinVerificationScreen(email: emailTEController.text.trim()),
           ),
         );
-        // Navigator.pushReplacementNamed(context, PinVerificationScreen.name,arguments: emailTEController.text.trim());
         showSnackBarMessage(context, 'A 6 digit OTP code sent to your email');
         sendOtp();
       }
-    }else{
-      if(mounted){
-        showSnackBarMessage(context, response.errorMessage!);
+    } else {
+      if (mounted) {
+        showSnackBarMessage(
+          context,
+          _forgotPasswordEmailController.errorMessage!,
+        );
       }
-    }
-    _getEmailAddressValidateInProgress = false;
-    if(mounted){
-      setState(() {});
     }
   }
 
   EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
+
   void sendOtp() async {
     bool result = await emailAuth.sendOtp(
-        recipientMail: emailTEController.value.text, otpLength: 6
+      recipientMail: emailTEController.value.text,
+      otpLength: 6,
     );
   }
 
